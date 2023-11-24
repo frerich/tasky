@@ -22,6 +22,8 @@ defmodule TaskyWeb.Router do
 
     get "/", PageController, :home
 
+    get "/health", HealthController, :index
+
     live "/tasks", TaskLive.Index, :index
     live "/tasks/new", TaskLive.Index, :new
     live "/tasks/:id/edit", TaskLive.Index, :edit
