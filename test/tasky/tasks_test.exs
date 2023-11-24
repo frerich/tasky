@@ -21,7 +21,11 @@ defmodule Tasky.TasksTest do
     end
 
     test "create_task/1 with valid data creates a task" do
-      valid_attrs = %{description: "some description", title: "some title", due_date: ~D[2023-11-23]}
+      valid_attrs = %{
+        description: "some description",
+        title: "some title",
+        due_date: ~D[2023-11-23]
+      }
 
       assert {:ok, %Task{} = task} = Tasks.create_task(valid_attrs)
       assert task.description == "some description"
@@ -35,7 +39,12 @@ defmodule Tasky.TasksTest do
 
     test "update_task/2 with valid data updates the task" do
       task = task_fixture()
-      update_attrs = %{description: "some updated description", title: "some updated title", due_date: ~D[2023-11-24]}
+
+      update_attrs = %{
+        description: "some updated description",
+        title: "some updated title",
+        due_date: ~D[2023-11-24]
+      }
 
       assert {:ok, %Task{} = task} = Tasks.update_task(task, update_attrs)
       assert task.description == "some updated description"

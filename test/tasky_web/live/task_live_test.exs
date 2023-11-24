@@ -5,7 +5,11 @@ defmodule TaskyWeb.TaskLiveTest do
   import Tasky.TasksFixtures
 
   @create_attrs %{description: "some description", title: "some title", due_date: "2023-11-23"}
-  @update_attrs %{description: "some updated description", title: "some updated title", due_date: "2023-11-24"}
+  @update_attrs %{
+    description: "some updated description",
+    title: "some updated title",
+    due_date: "2023-11-24"
+  }
   @invalid_attrs %{description: nil, title: nil, due_date: nil}
 
   defp create_task(_) do
