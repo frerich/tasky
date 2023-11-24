@@ -4,12 +4,11 @@ set -o errexit
 
 export MIX_ENV=prod
 
-mix assets.setup
-mix deps.get --only prod
 mix ecto.setup
-mix compile
+mix assets.setup
 mix assets.deploy
+mix deps.get --only prod
+mix compile
 
 # Build the release and overwrite the existing release directory
 mix release --overwrite
-
