@@ -1,0 +1,32 @@
+---
+name: 'Release'
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: 1.15.2
+          otp-version: 26.0.2
+
+      - name: Create Release Package
+        run: mix release
+
+      - name: Publish to S3 bucket
+        run: |
+          tar -z -c -C _build/prod/rel/tasky . | aws s3 cp - s3://tasky-bucket/$OBJECT_NAME
+          echo -n $OBJECT_NAME | aws s3 cp - s3://tasky-bucket/releases/latest.txt
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_ACCESS_KEY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_SECRET_ACCESS_KEY }}
+          OBJECT_NAME: releases/tasky-${{ github.ref_name }}.tar.gz
