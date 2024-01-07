@@ -35,5 +35,9 @@ jobs:
         restore-keys: ${{ runner.os }}-mix-
     - name: Install dependencies
       run: mix deps.get
+    - name: Launch PostgreSQL
+      run: |
+        sudo systemctl start postgresql.service
+        sudo su - postgres -c "psql -c \"ALTER USER postgres PASSWORD 'postgres'\""
     - name: Run tests
       run: mix test
