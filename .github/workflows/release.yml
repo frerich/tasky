@@ -28,5 +28,5 @@ jobs:
           echo -n $OBJECT_NAME | aws s3 cp - s3://tasky-bucket/releases/latest.txt
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_ACCESS_KEY_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_SECRET_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_SECRET_ACCESS_KEY }}
           OBJECT_NAME: releases/tasky-${{ github.ref_name }}.tar.gz
