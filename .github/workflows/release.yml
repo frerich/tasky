@@ -36,7 +36,6 @@ jobs:
 
       - name: Publish to S3 bucket
         run: |
-          aws --version
           tar -z -c -C _build/prod/rel/tasky . | aws s3 cp - s3://tasky-bucket/$OBJECT_NAME
           echo -n $OBJECT_NAME | aws s3 cp - s3://tasky-bucket/releases/latest.txt
         env:
@@ -44,3 +43,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_SECRET_ACCESS_KEY }}
           OBJECT_NAME: releases/tasky-${{ github.ref_name }}.tar.gz
+
+      - name: Deploy to EC2
+        run: |
+          echo -n $DEPLOY_HOST_PRIVATE_KEY | base64 -d > /tmp/deploy_host.pem
+          chmod 0400 /tmp/deploy_host.pem
+          ssh -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST /home/ubuntu/deploy.sh
+
