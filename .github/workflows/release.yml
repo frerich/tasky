@@ -1,0 +1,44 @@
+---
+name: 'Release'
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-20.04
+    env:
+      MIX_ENV: prod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@1
+        with:
+          version-file: .tool-versions
+
+      - name: Restore dependencies cache
+        uses: actions/cache@v3
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Create Release Package
+        run: mix release
+
+      - name: Deploy to DigitalOcean Droplet
+        run: |
+          echo -n $DEPLOY_HOST_PRIVATE_KEY | base64 -d > /tmp/deploy_host.pem
+          chmod 0400 /tmp/deploy_host.pem
+          tar -z -c -C _build/prod/rel/tasky . | ssh $DEPLOY_USER@$DEPLOY_HOST -- tar -z -x
+        env:
+          DEPLOY_HOST_PRIVATE_KEY: ${{ secrets.DEPLOY_HOST_PRIVATE_KEY }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
