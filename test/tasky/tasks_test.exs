@@ -24,13 +24,13 @@ defmodule Tasky.TasksTest do
       valid_attrs = %{
         description: "some description",
         title: "some title",
-        due_date: ~D[2023-11-23]
+        due_date: ~D[2025-01-03]
       }
 
       assert {:ok, %Task{} = task} = Tasks.create_task(valid_attrs)
       assert task.description == "some description"
       assert task.title == "some title"
-      assert task.due_date == ~D[2023-11-23]
+      assert task.due_date == ~D[2025-01-03]
     end
 
     test "create_task/1 with invalid data returns error changeset" do
@@ -43,13 +43,13 @@ defmodule Tasky.TasksTest do
       update_attrs = %{
         description: "some updated description",
         title: "some updated title",
-        due_date: ~D[2023-11-24]
+        due_date: ~D[2025-01-04]
       }
 
       assert {:ok, %Task{} = task} = Tasks.update_task(task, update_attrs)
       assert task.description == "some updated description"
       assert task.title == "some updated title"
-      assert task.due_date == ~D[2023-11-24]
+      assert task.due_date == ~D[2025-01-04]
     end
 
     test "update_task/2 with invalid data returns error changeset" do

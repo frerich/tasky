@@ -13,13 +13,12 @@ jobs:
     env:
       MIX_ENV: prod
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@61e01a43a562a89bfc54c7f9a378ff67b03e4a21 # v1.16.0
+        uses: erlef/setup-beam@1
         with:
-          elixir-version: '1.15.2' # [Required] Define the Elixir version
-          otp-version: '26.0'      # [Required] Define the Erlang/OTP version
+          version-file: .tool-versions
 
       - name: Restore dependencies cache
         uses: actions/cache@v3
@@ -34,19 +33,12 @@ jobs:
       - name: Create Release Package
         run: mix release
 
-      - name: Publish to S3 bucket
-        run: |
-          tar -z -c -C _build/prod/rel/tasky . | aws s3 cp - s3://tasky-bucket/$OBJECT_NAME
-          echo -n $OBJECT_NAME | aws s3 cp - s3://tasky-bucket/releases/latest.txt
-        env:
-          AWS_REGION: eu-central-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOY_RELEASE_TARBALL_AWS_SECRET_ACCESS_KEY }}
-          OBJECT_NAME: releases/tasky-${{ github.ref_name }}.tar.gz
-
-      - name: Deploy to EC2
+      - name: Deploy to DigitalOcean Droplet
         run: |
           echo -n $DEPLOY_HOST_PRIVATE_KEY | base64 -d > /tmp/deploy_host.pem
           chmod 0400 /tmp/deploy_host.pem
-          ssh -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST /home/ubuntu/deploy.sh
-
+          tar -z -c -C _build/prod/rel/tasky . | ssh $DEPLOY_USER@$DEPLOY_HOST -- tar -z -x
+        env:
+          DEPLOY_HOST_PRIVATE_KEY: ${{ secrets.DEPLOY_HOST_PRIVATE_KEY }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}

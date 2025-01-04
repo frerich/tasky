@@ -1,5 +1,5 @@
 defmodule TaskyWeb.UserSettingsLiveTest do
-  use TaskyWeb.ConnCase
+  use TaskyWeb.ConnCase, async: true
 
   alias Tasky.Accounts
   import Phoenix.LiveViewTest

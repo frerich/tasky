@@ -1,5 +1,5 @@
 <.header>
-  Task <%= @task.id %>
+  Task {@task.id}
   <:subtitle>This is a task record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/tasks/#{@task}/show/edit"} phx-click={JS.push_focus()}>
@@ -9,9 +9,9 @@
 </.header>
 
 <.list>
-  <:item title="Title"><%= @task.title %></:item>
-  <:item title="Description"><%= @task.description %></:item>
-  <:item title="Due date"><%= @task.due_date %></:item>
+  <:item title="Title">{@task.title}</:item>
+  <:item title="Description">{@task.description}</:item>
+  <:item title="Due date">{@task.due_date}</:item>
 </.list>
 
 <.back navigate={~p"/tasks"}>Back to tasks</.back>

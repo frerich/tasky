@@ -1,5 +1,5 @@
 defmodule TaskyWeb.UserResetPasswordLiveTest do
-  use TaskyWeb.ConnCase
+  use TaskyWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import Tasky.AccountsFixtures
@@ -100,7 +100,7 @@ defmodule TaskyWeb.UserResetPasswordLiveTest do
       assert conn.resp_body =~ "Log in"
     end
 
-    test "redirects to password reset page when the Register button is clicked", %{
+    test "redirects to registration page when the Register button is clicked", %{
       conn: conn,
       token: token
     } do

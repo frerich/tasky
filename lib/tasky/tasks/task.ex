@@ -7,7 +7,7 @@ defmodule Tasky.Tasks.Task do
     field :title, :string
     field :due_date, :date
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

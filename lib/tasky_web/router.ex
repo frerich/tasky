@@ -21,15 +21,6 @@ defmodule TaskyWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-
-    get "/health", HealthController, :index
-
-    live "/tasks", TaskLive.Index, :index
-    live "/tasks/new", TaskLive.Index, :new
-    live "/tasks/:id/edit", TaskLive.Index, :edit
-
-    live "/tasks/:id", TaskLive.Show, :show
-    live "/tasks/:id/show/edit", TaskLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -37,19 +28,11 @@ defmodule TaskyWeb.Router do
   #   pipe_through :api
   # end
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
+  # Enable Swoosh mailbox preview in development
   if Application.compile_env(:tasky, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
-
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: TaskyWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
@@ -77,6 +60,13 @@ defmodule TaskyWeb.Router do
       on_mount: [{TaskyWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/tasks", TaskLive.Index, :index
+      live "/tasks/new", TaskLive.Index, :new
+      live "/tasks/:id/edit", TaskLive.Index, :edit
+
+      live "/tasks/:id", TaskLive.Show, :show
+      live "/tasks/:id/show/edit", TaskLive.Show, :edit
     end
   end
 

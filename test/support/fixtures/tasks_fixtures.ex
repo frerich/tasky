@@ -12,7 +12,7 @@ defmodule Tasky.TasksFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
-        due_date: ~D[2023-11-23],
+        due_date: ~D[2025-01-03],
         title: "some title"
       })
       |> Tasky.Tasks.create_task()

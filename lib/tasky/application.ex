@@ -8,18 +8,16 @@ defmodule Tasky.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Telemetry supervisor
       TaskyWeb.Telemetry,
-      # Start the Ecto repository
       Tasky.Repo,
-      # Start the PubSub system
+      {DNSCluster, query: Application.get_env(:tasky, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Tasky.PubSub},
-      # Start Finch
+      # Start the Finch HTTP client for sending emails
       {Finch, name: Tasky.Finch},
-      # Start the Endpoint (http/https)
-      TaskyWeb.Endpoint
       # Start a worker by calling: Tasky.Worker.start_link(arg)
-      # {Tasky.Worker, arg}
+      # {Tasky.Worker, arg},
+      # Start to serve requests, typically the last entry
+      TaskyWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

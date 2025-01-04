@@ -42,8 +42,9 @@ defmodule TaskyWeb do
         formats: [:html, :json],
         layouts: [html: TaskyWeb.Layouts]
 
+      use Gettext, backend: TaskyWeb.Gettext
+
       import Plug.Conn
-      import TaskyWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -81,11 +82,13 @@ defmodule TaskyWeb do
 
   defp html_helpers do
     quote do
+      # Translation
+      use Gettext, backend: TaskyWeb.Gettext
+
       # HTML escaping functionality
       import Phoenix.HTML
-      # Core UI components and translation
+      # Core UI components
       import TaskyWeb.CoreComponents
-      import TaskyWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -105,7 +108,7 @@ defmodule TaskyWeb do
   end
 
   @doc """
-  When used, dispatch to the appropriate controller/view/etc.
+  When used, dispatch to the appropriate controller/live_view/etc.
   """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])

@@ -8,7 +8,7 @@ defmodule TaskyWeb.TaskLive.FormComponent do
     ~H"""
     <div>
       <.header>
-        <%= @title %>
+        {@title}
         <:subtitle>Use this form to manage task records in your database.</:subtitle>
       </.header>
 
@@ -32,22 +32,18 @@ defmodule TaskyWeb.TaskLive.FormComponent do
 
   @impl true
   def update(%{task: task} = assigns, socket) do
-    changeset = Tasks.change_task(task)
-
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form(changeset)}
+     |> assign_new(:form, fn ->
+       to_form(Tasks.change_task(task))
+     end)}
   end
 
   @impl true
   def handle_event("validate", %{"task" => task_params}, socket) do
-    changeset =
-      socket.assigns.task
-      |> Tasks.change_task(task_params)
-      |> Map.put(:action, :validate)
-
-    {:noreply, assign_form(socket, changeset)}
+    changeset = Tasks.change_task(socket.assigns.task, task_params)
+    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
   def handle_event("save", %{"task" => task_params}, socket) do
@@ -65,7 +61,7 @@ defmodule TaskyWeb.TaskLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
@@ -80,12 +76,8 @@ defmodule TaskyWeb.TaskLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, form: to_form(changeset))}
     end
-  end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

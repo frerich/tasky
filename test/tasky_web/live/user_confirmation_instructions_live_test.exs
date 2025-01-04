@@ -1,5 +1,5 @@
 defmodule TaskyWeb.UserConfirmationInstructionsLiveTest do
-  use TaskyWeb.ConnCase
+  use TaskyWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import Tasky.AccountsFixtures

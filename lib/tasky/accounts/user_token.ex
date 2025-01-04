@@ -19,7 +19,7 @@ defmodule Tasky.Accounts.UserToken do
     field :sent_to, :string
     belongs_to :user, Tasky.Accounts.User
 
-    timestamps(updated_at: false)
+    timestamps(type: :utc_datetime, updated_at: false)
   end
 
   @doc """
