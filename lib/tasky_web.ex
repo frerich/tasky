@@ -43,7 +43,7 @@ defmodule TaskyWeb do
         layouts: [html: TaskyWeb.Layouts]
 
       import Plug.Conn
-      import TaskyWeb.Gettext
+      use Gettext, backend: TaskyWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +85,7 @@ defmodule TaskyWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import TaskyWeb.CoreComponents
-      import TaskyWeb.Gettext
+      use Gettext, backend: TaskyWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

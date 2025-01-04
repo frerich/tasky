@@ -17,7 +17,7 @@ defmodule TaskyWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TaskyWeb.Gettext
+  use Gettext, backend: TaskyWeb.Gettext
 
   @doc """
   Renders a modal.
