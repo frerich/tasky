@@ -31,7 +31,7 @@ jobs:
           path: |
             deps
             _build
-          key: deps-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock') }}
+          key: mix-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock', 'config/config.exs', 'config/prod.exs') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
