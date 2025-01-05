@@ -31,8 +31,7 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :tasky, Tasky.Repo,
-    ssl: true,
-    ssl_opts: [
+    ssl: [
       server_name_indication: URI.parse(database_url).host |> to_charlist(),
       verify: :verify_none
     ],
