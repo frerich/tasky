@@ -45,7 +45,7 @@ jobs:
         run: |
           echo -n $DEPLOY_HOST_PRIVATE_KEY | base64 -d > /tmp/deploy_host.pem
           chmod 0400 /tmp/deploy_host.pem
-          tar -z -c -C _build/prod/rel/tasky . | ssh -v -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST -- tar -z -x
+          tar -z -c -C _build/prod/rel/tasky . | ssh -v -o StrictHostKeyChecking=no -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST -- tar -z -x
         env:
           DEPLOY_HOST_PRIVATE_KEY: ${{ secrets.DEPLOY_HOST_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
