@@ -39,13 +39,16 @@ jobs:
           mix deps.compile
 
       - name: Create Release Package
-        run: mix release
+        run: |
+          mix assets.deploy
+          mix release
 
       - name: Deploy to DigitalOcean Droplet
         run: |
           echo -n $DEPLOY_HOST_PRIVATE_KEY | base64 -d > /tmp/deploy_host.pem
           chmod 0400 /tmp/deploy_host.pem
           tar -z -c -C _build/prod/rel tasky | ssh -o StrictHostKeyChecking=no -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST -- tar -z -x
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_host.pem $DEPLOY_USER@$DEPLOY_HOST -- systemctl restart tasky.service
         env:
           DEPLOY_HOST_PRIVATE_KEY: ${{ secrets.DEPLOY_HOST_PRIVATE_KEY }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
