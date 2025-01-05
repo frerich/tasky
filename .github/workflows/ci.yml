@@ -24,14 +24,14 @@ jobs:
           version-file: .tool-versions
           version-type: strict
 
-       - name: Restore cached dependencies and build artifacts
-          id: cache
-          uses: actions/cache@v3
-          with:
-            path: |
-              deps
-              _build
-            key: deps-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock') }}
+      - name: Restore cached dependencies and build artifacts
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            deps
+            _build
+          key: deps-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
