@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -15,32 +16,32 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Elixir
-      uses: erlef/setup-beam@v1
-      with:
-        version-file: .tool-versions
-        version-type: strict
-
-     - name: Restore cached dependencies and build artifacts
-        id: cache
-        uses: actions/cache@v3
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
         with:
-          path: |
-            deps
-            _build
-          key: deps-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock') }}
+          version-file: .tool-versions
+          version-type: strict
 
-    - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: |
-        mix deps.get
-        mix deps.compile
+       - name: Restore cached dependencies and build artifacts
+          id: cache
+          uses: actions/cache@v3
+          with:
+            path: |
+              deps
+              _build
+            key: deps-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.erlang-version }}-${{ hashFiles('**/mix.lock') }}
 
-    - name: Run static checks
-      run: |
-        mix format --check-formatted
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mix deps.get
+          mix deps.compile
 
-    - name: Compile
-      run: mix compile --warnings-as-errors
+      - name: Run static checks
+        run: |
+          mix format --check-formatted
+
+      - name: Compile
+        run: mix compile --warnings-as-errors
